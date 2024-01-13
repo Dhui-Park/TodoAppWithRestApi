@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="137" id="5no-q7-Eps" customClass="TodoCell" customModule="TodoAppWithRestApi" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="137"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5no-q7-Eps" id="HVZ-ky-5M6">
+                <rect key="frame" x="0.0" y="0.0" width="393" height="137"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="todoID: 01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ql-dG-Vmf">
+                        <rect key="frame" x="14" y="9.9999999999999982" width="77.666666666666671" height="20.333333333333329"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KIV-mm-OjP">
+                        <rect key="frame" x="14" y="50.333333333333336" width="239" height="76.666666666666657"/>
+                        <mutableString key="text">Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용</mutableString>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="igk-y7-wLX">
+                        <rect key="frame" x="263" y="10" width="120" height="34.333333333333336"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zlw-1E-ep1">
+                                <rect key="frame" x="0.0" y="0.0" width="59" height="34.333333333333336"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="수정"/>
+                                <connections>
+                                    <action selector="onEditBtnClicked:" destination="5no-q7-Eps" eventType="touchUpInside" id="mEg-oE-b9q"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oYW-OV-ccu">
+                                <rect key="frame" x="61" y="0.0" width="59" height="34.333333333333336"/>
+                                <color key="tintColor" systemColor="systemPurpleColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="삭제"/>
+                                <connections>
+                                    <action selector="onDeleteBtnClicked:" destination="5no-q7-Eps" eventType="touchUpInside" id="8II-Ph-dQr"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="120" id="WJz-7X-cS0"/>
+                        </constraints>
+                    </stackView>
+                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jkg-b6-tT2">
+                        <rect key="frame" x="334" y="54.333333333333343" width="51" height="31"/>
+                    </switch>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="KIV-mm-OjP" secondAttribute="bottom" constant="10" id="0xZ-nk-QTD"/>
+                    <constraint firstItem="jkg-b6-tT2" firstAttribute="trailing" secondItem="igk-y7-wLX" secondAttribute="trailing" id="7Mh-rl-dsg"/>
+                    <constraint firstItem="KIV-mm-OjP" firstAttribute="top" secondItem="2ql-dG-Vmf" secondAttribute="bottom" constant="20" id="AN3-3i-Ds5"/>
+                    <constraint firstItem="KIV-mm-OjP" firstAttribute="leading" secondItem="2ql-dG-Vmf" secondAttribute="leading" id="HNT-zR-pLH"/>
+                    <constraint firstItem="jkg-b6-tT2" firstAttribute="top" secondItem="igk-y7-wLX" secondAttribute="bottom" constant="10" id="IR5-yN-Zn3"/>
+                    <constraint firstAttribute="trailing" secondItem="igk-y7-wLX" secondAttribute="trailing" constant="10" id="dge-Wb-U10"/>
+                    <constraint firstItem="2ql-dG-Vmf" firstAttribute="top" secondItem="HVZ-ky-5M6" secondAttribute="top" constant="10" id="h6L-aG-25H"/>
+                    <constraint firstItem="igk-y7-wLX" firstAttribute="top" secondItem="2ql-dG-Vmf" secondAttribute="top" id="hsw-Yb-qR9"/>
+                    <constraint firstItem="2ql-dG-Vmf" firstAttribute="leading" secondItem="HVZ-ky-5M6" secondAttribute="leading" constant="14" id="qpj-Sk-2FS"/>
+                    <constraint firstItem="igk-y7-wLX" firstAttribute="leading" secondItem="KIV-mm-OjP" secondAttribute="trailing" constant="10" id="vdW-h0-7dU"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contentLabel" destination="KIV-mm-OjP" id="RMN-Kh-sct"/>
+                <outlet property="selectionSwitch" destination="jkg-b6-tT2" id="Dbd-Pl-t4U"/>
+                <outlet property="titleLabel" destination="2ql-dG-Vmf" id="Zdc-5e-cLz"/>
+            </connections>
+            <point key="canvasLocation" x="165.64885496183206" y="-25.704225352112676"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemPurpleColor">
+            <color red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
