@@ -12,6 +12,8 @@ class MainVC: UIViewController {
     
     @IBOutlet weak var myTableView: UITableView!
     
+    var todosVM: TodosVM = TodosVM()
+    
     var dummyDataList: [String] = ["aaaaaaa", "bbbbbbb", "ccccccc", "ddddddd", "eeeeeeee", "fffffff", "aaaaaaa", "bbbbbbb", "ccccccc", "ddddddd", "eeeeeeee", "fffffff","aaaaaaa", "bbbbbbb", "ccccccc", "ddddddd", "eeeeeeee", "fffffff","aaaaaaa", "bbbbbbb", "ccccccc", "ddddddd", "eeeeeeee", "fffffff"]
     
     override func viewDidLoad() {
