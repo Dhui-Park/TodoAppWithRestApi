@@ -27,8 +27,7 @@ class TodosVM: ObservableObject {
 //            }
 //        }
         
-        
-        TodosAPI.addATodoJson(title: "사이타마후후 222", isDone: true, completion: { [weak self] result in
+        TodosAPI.editATodoJson(id: 4945,title: "사이타마후후 222 - edited", isDone: false, completion: { [weak self] result in
             
             guard let self = self else { return }
             
@@ -40,6 +39,19 @@ class TodosVM: ObservableObject {
                 self.handleError(failure)
             }
         })
+        
+//        TodosAPI.addATodoJson(title: "사이타마후후 222", isDone: true, completion: { [weak self] result in
+//            
+//            guard let self = self else { return }
+//            
+//            switch result {
+//            case .success(let aTodoResponse):
+//                print(#fileID, #function, #line, "- aTodoResponse addATodo: \(aTodoResponse)")
+//            case .failure(let failure):
+//                print(#fileID, #function, #line, "- failure: \(failure)")
+//                self.handleError(failure)
+//            }
+//        })
         
 //        TodosAPI.fetchATodo(id: 3200, completion: { [weak self] result in
 //            
