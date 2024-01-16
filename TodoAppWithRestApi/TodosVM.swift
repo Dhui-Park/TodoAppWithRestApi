@@ -14,18 +14,31 @@ class TodosVM: ObservableObject {
         print(#fileID, #function, #line, "- ")
         
         
-        TodosAPI.searchTodos(searchTerm: "빡코딩") { [weak self] result in
-
+//        TodosAPI.searchTodos(searchTerm: "빡코딩") { [weak self] result in
+//
+//            guard let self = self else { return }
+//
+//            switch result {
+//            case .success(let todosResponse):
+//                print(#fileID, #function, #line, "- search todosResponse: \(todosResponse)")
+//            case .failure(let failure):
+//                print(#fileID, #function, #line, "- failure: \(failure)")
+//                self.handleError(failure)
+//            }
+//        }
+        
+        TodosAPI.addATodo(title: "사이타마후후", isDone: true, completion: { [weak self] result in
+            
             guard let self = self else { return }
-
+            
             switch result {
-            case .success(let todosResponse):
-                print(#fileID, #function, #line, "- search todosResponse: \(todosResponse)")
+            case .success(let aTodoResponse):
+                print(#fileID, #function, #line, "- aTodoResponse addATodo: \(aTodoResponse)")
             case .failure(let failure):
                 print(#fileID, #function, #line, "- failure: \(failure)")
                 self.handleError(failure)
             }
-        }
+        })
         
 //        TodosAPI.fetchATodo(id: 3200, completion: { [weak self] result in
 //            
