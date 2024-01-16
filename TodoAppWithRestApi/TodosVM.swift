@@ -27,7 +27,8 @@ class TodosVM: ObservableObject {
 //            }
 //        }
         
-        TodosAPI.addATodo(title: "사이타마후후", isDone: true, completion: { [weak self] result in
+        
+        TodosAPI.addATodoJson(title: "사이타마후후 222", isDone: true, completion: { [weak self] result in
             
             guard let self = self else { return }
             
