@@ -27,7 +27,7 @@ class TodosVM: ObservableObject {
 //            }
 //        }
         
-        TodosAPI.editATodoJson(id: 4945,title: "사이타마후후 222 - edited", isDone: false, completion: { [weak self] result in
+        TodosAPI.deleteATodo(id: 4944, completion: { [weak self] result in
             
             guard let self = self else { return }
             

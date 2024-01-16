@@ -441,7 +441,7 @@ enum TodosAPI {
     }
     
     
-    /// 할일 수정하기
+    /// 할일 수정하기 - Json
     /// - Parameters:
     ///   - id: 수정할 아이템 아이디
     ///   - title: 타이틀
@@ -477,6 +477,155 @@ enum TodosAPI {
         
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
+        // 2. URLSession으로 API를 호출한다
+        // 3. API 호출에 대한 응답을 받는다
+        
+        URLSession.shared.dataTask(with: urlRequest) { data, urlResponse, err in
+            
+            print(#fileID, #function, #line, "- data: \(data)")
+            print(#fileID, #function, #line, "- response: \(urlResponse)")
+            print(#fileID, #function, #line, "- err: \(err)")
+            
+            if let error = err {
+                return completion(.failure(ApiError.unknown(error)))
+            }
+            
+            
+            guard let httpResponse = urlResponse as? HTTPURLResponse else {
+                print("bad status code")
+                return completion(.failure(ApiError.unknown(nil)))
+            }
+            
+            switch httpResponse.statusCode {
+            case 401:
+                return completion(.failure(ApiError.unauthorized))
+                
+            case 204:
+                return completion(.failure(ApiError.noContent))
+            default:
+                print("default")
+            }
+            
+            if !(200...299).contains(httpResponse.statusCode) {
+                return completion(.failure(ApiError.badStatus(code: httpResponse.statusCode)))
+            }
+            
+            
+            
+            if let jsonData = data {
+                // convert data to our swift model
+                do {
+                    // Json -> struct로 변경, 즉 decoding (data parsing)
+                    let baseResponse = try JSONDecoder().decode(BaseResponse<Todo>.self, from: jsonData)
+                   
+                    completion(.success(baseResponse))
+                } catch {
+                    // decoding error
+                    completion(.failure(ApiError.decodingError))
+                }
+            }
+            
+        }.resume()
+        
+        
+    }
+    
+    /// 할일 수정하기 - PUT urlEncoded
+    /// - Parameters:
+    ///   - id: 수정할 아이템 아이디
+    ///   - title: 타이틀
+    ///   - isDone: 완료 여부
+    ///   - completion: 응답 결과
+    static func editATodo(id: Int, title: String, isDone: Bool = false, completion: @escaping (Result<BaseResponse<Todo>, ApiError>) -> Void) {
+        // 1. URLRequest를 만든다
+        
+        let urlString: String = baseURL + "/todos/\(id)"
+        
+        guard let url = URL(string: urlString) else {
+            return completion(.failure(ApiError.notAllowedUrl))
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "PUT"
+        urlRequest.addValue("application/json", forHTTPHeaderField: "accept")
+        
+        urlRequest.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        
+        let requestParams: [String : String] = ["title" : title, "is_done" : "\(isDone)"]
+        
+        urlRequest.percentEncodeParameters(parameters: requestParams)
+
+        // 2. URLSession으로 API를 호출한다
+        // 3. API 호출에 대한 응답을 받는다
+        
+        URLSession.shared.dataTask(with: urlRequest) { data, urlResponse, err in
+            
+            print(#fileID, #function, #line, "- data: \(data)")
+            print(#fileID, #function, #line, "- response: \(urlResponse)")
+            print(#fileID, #function, #line, "- err: \(err)")
+            
+            if let error = err {
+                return completion(.failure(ApiError.unknown(error)))
+            }
+            
+            
+            guard let httpResponse = urlResponse as? HTTPURLResponse else {
+                print("bad status code")
+                return completion(.failure(ApiError.unknown(nil)))
+            }
+            
+            switch httpResponse.statusCode {
+            case 401:
+                return completion(.failure(ApiError.unauthorized))
+                
+            case 204:
+                return completion(.failure(ApiError.noContent))
+            default:
+                print("default")
+            }
+            
+            if !(200...299).contains(httpResponse.statusCode) {
+                return completion(.failure(ApiError.badStatus(code: httpResponse.statusCode)))
+            }
+            
+            
+            
+            if let jsonData = data {
+                // convert data to our swift model
+                do {
+                    // Json -> struct로 변경, 즉 decoding (data parsing)
+                    let baseResponse = try JSONDecoder().decode(BaseResponse<Todo>.self, from: jsonData)
+                   
+                    completion(.success(baseResponse))
+                } catch {
+                    // decoding error
+                    completion(.failure(ApiError.decodingError))
+                }
+            }
+            
+        }.resume()
+        
+        
+    }
+    
+    /// 할일 삭제하기 - DELETE
+    /// - Parameters:
+    ///   - id: 삭제할 아이템 아이디
+    ///   - completion: 응답 결과
+    static func deleteATodo(id: Int, completion: @escaping (Result<BaseResponse<Todo>, ApiError>) -> Void) {
+        // 1. URLRequest를 만든다
+        
+        let urlString: String = baseURL + "/todos/\(id)"
+        
+        guard let url = URL(string: urlString) else {
+            return completion(.failure(ApiError.notAllowedUrl))
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "DELETE"
+        urlRequest.addValue("application/json", forHTTPHeaderField: "accept")
+        
+
         // 2. URLSession으로 API를 호출한다
         // 3. API 호출에 대한 응답을 받는다
         
