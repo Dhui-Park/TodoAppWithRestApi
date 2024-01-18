@@ -16,6 +16,22 @@ class TodoCell: UITableViewCell {
     
     @IBOutlet weak var selectionSwitch: UISwitch!
     
+    var cellData: Todo? = nil
+    
+    
+    /// 셀 데이터 적용
+    /// - Parameter cellData: Todo
+    func updateUI(_ cellData: Todo) {
+        guard let id: Int = cellData.id,
+              let title: String = cellData.title else {
+            print("id, title이 없습니다.")
+            return
+        }
+        self.cellData = cellData
+        
+        self.titleLabel.text = "아이디: \(id)"
+        self.contentLabel.text = title
+    }
     
     
     override func awakeFromNib() {

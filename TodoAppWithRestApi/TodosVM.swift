@@ -6,79 +6,45 @@
 //
 
 import Foundation
-import Combine
 
-class TodosVM: ObservableObject {
+class TodosVM {
+    
+    // 가공된 최종 데이터
+    var todos: [Todo] = [] {
+        didSet {
+            print(#fileID, #function, #line, "- ")
+            self.notifyTodosChanged?(todos)
+        }
+    }
+    
+    // 데이터 변경 이벤트
+    var notifyTodosChanged: (([Todo]) -> Void)? = nil
     
     init() {
         print(#fileID, #function, #line, "- ")
+        fetchTodos()
+    } // init
+    
+    func fetchTodos(page: Int = 1) {
+        print(#fileID, #function, #line, "- <#comment#>")
         
         
-//        TodosAPI.searchTodos(searchTerm: "빡코딩") { [weak self] result in
-//
-//            guard let self = self else { return }
-//
-//            switch result {
-//            case .success(let todosResponse):
-//                print(#fileID, #function, #line, "- search todosResponse: \(todosResponse)")
-//            case .failure(let failure):
-//                print(#fileID, #function, #line, "- failure: \(failure)")
-//                self.handleError(failure)
-//            }
-//        }
-        
-        TodosAPI.deleteATodo(id: 4944, completion: { [weak self] result in
+        // 서비스 로직
+        TodosAPI.fetchTodos(page: page, completion: { [weak self] result in
             
             guard let self = self else { return }
             
             switch result {
-            case .success(let aTodoResponse):
-                print(#fileID, #function, #line, "- aTodoResponse addATodo: \(aTodoResponse)")
+            case .success(let response):
+                if let fetchedTodos: [Todo] = response.data {
+                    self.todos = fetchedTodos
+                }
             case .failure(let failure):
-                print(#fileID, #function, #line, "- failure: \(failure)")
-                self.handleError(failure)
+                print("failure: \(failure)")
             }
+            
         })
-        
-//        TodosAPI.addATodoJson(title: "사이타마후후 222", isDone: true, completion: { [weak self] result in
-//            
-//            guard let self = self else { return }
-//            
-//            switch result {
-//            case .success(let aTodoResponse):
-//                print(#fileID, #function, #line, "- aTodoResponse addATodo: \(aTodoResponse)")
-//            case .failure(let failure):
-//                print(#fileID, #function, #line, "- failure: \(failure)")
-//                self.handleError(failure)
-//            }
-//        })
-        
-//        TodosAPI.fetchATodo(id: 3200, completion: { [weak self] result in
-//            
-//            guard let self = self else { return }
-//            
-//            switch result {
-//            case .success(let aTodoResponse):
-//                print(#fileID, #function, #line, "- aTodoResponse: \(aTodoResponse)")
-//            case .failure(let failure):
-//                print(#fileID, #function, #line, "- failure: \(failure)")
-//                self.handleError(failure)
-//            }
-//        })
-        
-//        TodosAPI.fetchTodos { [weak self] result in
-//            
-//            guard let self = self else { return }
-//            
-//            switch result {
-//            case .success(let todosResponse):
-//                print(#fileID, #function, #line, "- todosResponse: \(todosResponse)")
-//            case .failure(let failure):
-//                print(#fileID, #function, #line, "- failure: \(failure)")
-//                self.handleError(failure)
-//            }
-//        }
-    } // init
+    }
     
     
     /// API 에러 처리

@@ -24,6 +24,10 @@
 		B755ED792B558BC900499F3F /* URL+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B755ED782B558BC900499F3F /* URL+Ext.swift */; };
 		B7AA07112B565C27000EBE86 /* MultipartForm in Frameworks */ = {isa = PBXBuildFile; productRef = B7AA07102B565C27000EBE86 /* MultipartForm */; };
 		B7AA07132B56BA0D000EBE86 /* URLRequest+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA07122B56BA0D000EBE86 /* URLRequest+Ext.swift */; };
+		B7AA07152B56CA05000EBE86 /* TodosAPI+Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA07142B56CA05000EBE86 /* TodosAPI+Closure.swift */; };
+		B7AA07172B593DC6000EBE86 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA07162B593DC6000EBE86 /* Storyboarded.swift */; };
+		B7AA07192B593DF2000EBE86 /* Nibbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA07182B593DF2000EBE86 /* Nibbed.swift */; };
+		B7AA071B2B593E09000EBE86 /* ReuseIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA071A2B593E09000EBE86 /* ReuseIdentifiable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +68,10 @@
 		B755ED752B53E52E00499F3F /* TodosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosResponse.swift; sourceTree = "<group>"; };
 		B755ED782B558BC900499F3F /* URL+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Ext.swift"; sourceTree = "<group>"; };
 		B7AA07122B56BA0D000EBE86 /* URLRequest+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Ext.swift"; sourceTree = "<group>"; };
+		B7AA07142B56CA05000EBE86 /* TodosAPI+Closure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodosAPI+Closure.swift"; sourceTree = "<group>"; };
+		B7AA07162B593DC6000EBE86 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
+		B7AA07182B593DF2000EBE86 /* Nibbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nibbed.swift; sourceTree = "<group>"; };
+		B7AA071A2B593E09000EBE86 /* ReuseIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,19 +123,16 @@
 		B755ED3A2B52899D00499F3F /* TodoAppWithRestApi */ = {
 			isa = PBXGroup;
 			children = (
+				B7AA071C2B5943BA000EBE86 /* UI */,
 				B755ED772B558BB600499F3F /* Extensions */,
 				B755ED742B53E51800499F3F /* Data */,
-				B755ED722B52DC7200499F3F /* TodosVM.swift */,
 				B755ED6F2B52D88500499F3F /* API */,
+				B755ED722B52DC7200499F3F /* TodosVM.swift */,
 				B755ED3B2B52899D00499F3F /* AppDelegate.swift */,
 				B755ED3D2B52899D00499F3F /* SceneDelegate.swift */,
-				B755ED3F2B52899D00499F3F /* MainVC.swift */,
-				B755ED412B52899D00499F3F /* MainVC.storyboard */,
 				B755ED442B52899F00499F3F /* Assets.xcassets */,
 				B755ED462B52899F00499F3F /* LaunchScreen.storyboard */,
 				B755ED492B52899F00499F3F /* Info.plist */,
-				B755ED6B2B52924600499F3F /* TodoCell.xib */,
-				B755ED6D2B52967900499F3F /* TodoCell.swift */,
 			);
 			path = TodoAppWithRestApi;
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				B755ED702B52D89900499F3F /* TodosAPI.swift */,
+				B7AA07142B56CA05000EBE86 /* TodosAPI+Closure.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -170,8 +176,22 @@
 			children = (
 				B755ED782B558BC900499F3F /* URL+Ext.swift */,
 				B7AA07122B56BA0D000EBE86 /* URLRequest+Ext.swift */,
+				B7AA07162B593DC6000EBE86 /* Storyboarded.swift */,
+				B7AA07182B593DF2000EBE86 /* Nibbed.swift */,
+				B7AA071A2B593E09000EBE86 /* ReuseIdentifiable.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B7AA071C2B5943BA000EBE86 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				B755ED3F2B52899D00499F3F /* MainVC.swift */,
+				B755ED412B52899D00499F3F /* MainVC.storyboard */,
+				B755ED6B2B52924600499F3F /* TodoCell.xib */,
+				B755ED6D2B52967900499F3F /* TodoCell.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,9 +335,13 @@
 				B755ED402B52899D00499F3F /* MainVC.swift in Sources */,
 				B755ED3C2B52899D00499F3F /* AppDelegate.swift in Sources */,
 				B755ED712B52D89900499F3F /* TodosAPI.swift in Sources */,
+				B7AA07192B593DF2000EBE86 /* Nibbed.swift in Sources */,
 				B755ED762B53E52E00499F3F /* TodosResponse.swift in Sources */,
 				B755ED3E2B52899D00499F3F /* SceneDelegate.swift in Sources */,
 				B755ED792B558BC900499F3F /* URL+Ext.swift in Sources */,
+				B7AA07152B56CA05000EBE86 /* TodosAPI+Closure.swift in Sources */,
+				B7AA071B2B593E09000EBE86 /* ReuseIdentifiable.swift in Sources */,
+				B7AA07172B593DC6000EBE86 /* Storyboarded.swift in Sources */,
 				B755ED732B52DC7200499F3F /* TodosVM.swift in Sources */,
 				B7AA07132B56BA0D000EBE86 /* URLRequest+Ext.swift in Sources */,
 				B755ED6E2B52967900499F3F /* TodoCell.swift in Sources */,

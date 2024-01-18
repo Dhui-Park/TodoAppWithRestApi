@@ -24,7 +24,7 @@
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KIV-mm-OjP">
                         <rect key="frame" x="14" y="50.333333333333336" width="239" height="76.666666666666657"/>
-                        <mutableString key="text">Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용</mutableString>
+                        <string key="text">Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용Todo 내용</string>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -68,6 +68,7 @@
                     <constraint firstItem="2ql-dG-Vmf" firstAttribute="top" secondItem="HVZ-ky-5M6" secondAttribute="top" constant="10" id="h6L-aG-25H"/>
                     <constraint firstItem="igk-y7-wLX" firstAttribute="top" secondItem="2ql-dG-Vmf" secondAttribute="top" id="hsw-Yb-qR9"/>
                     <constraint firstItem="2ql-dG-Vmf" firstAttribute="leading" secondItem="HVZ-ky-5M6" secondAttribute="leading" constant="14" id="qpj-Sk-2FS"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jkg-b6-tT2" secondAttribute="bottom" constant="20" id="s1x-GK-V5K"/>
                     <constraint firstItem="igk-y7-wLX" firstAttribute="leading" secondItem="KIV-mm-OjP" secondAttribute="trailing" constant="10" id="vdW-h0-7dU"/>
                 </constraints>
             </tableViewCellContentView>
