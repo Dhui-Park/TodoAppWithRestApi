@@ -26,6 +26,8 @@ class MainVC: UIViewController {
         
         self.myTableView.dataSource = self
         
+        
+        
         // ViewModel 이벤트 받기 - View&ViewModel 묶기
         self.todosVM.notifyTodosChanged = { updatedTodos in
             self.todos = updatedTodos

@@ -23,6 +23,24 @@ class TodosVM {
     init() {
         print(#fileID, #function, #line, "- ")
         fetchTodos()
+        
+        TodosAPI.fetchSelectedTodos(selectedTodoIds: [4975, 4974],
+                                    completion: { result in
+            switch result {
+            case .success(let data):
+                print("TodosVM - fetchSelectedTodos: data: \(data)")
+            case .failure(let failure):
+                print("TodosVM - fetchSelectedTodos: failure: \(failure)")
+            }
+        })
+        
+//        TodosAPI.deleteSelectedTodos(selectedTodoIds: [4983, 4979, 4978, 4977, 4976],
+//                                     completion: { [weak self] deletedTodos in
+//            print("TodosVM deleteSelectedTodos - deletedTodos: \(deletedTodos)")
+//            
+//        })
+        
+        
     } // init
     
     func fetchTodos(page: Int = 1) {
