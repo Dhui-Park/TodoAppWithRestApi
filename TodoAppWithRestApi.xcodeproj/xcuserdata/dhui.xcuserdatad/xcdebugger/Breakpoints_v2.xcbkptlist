@@ -18,6 +18,38 @@
             endingLineNumber = "225"
             landmarkName = "searchTodos(searchTerm:page:completion:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "855296E7-E9E7-49D6-AE57-21B2ABCF5183 - 1952edaa43472899"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static TodoAppWithRestApi.TodosAPI.searchTodos(searchTerm: Swift.String, page: Swift.Int, completion: (Swift.Result&lt;TodoAppWithRestApi.BaseListResponse&lt;TodoAppWithRestApi.Todo&gt;, TodoAppWithRestApi.TodosAPI.ApiError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "TodoAppWithRestApi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dhui/Desktop/iOS%20Swift/UIKit/TodoAppWithRestApi/TodoAppWithRestApi/API/TodosAPI+Closure.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "226"
+                  endingLineNumber = "226"
+                  offsetFromSymbolStart = "5032">
+               </Location>
+               <Location
+                  uuid = "855296E7-E9E7-49D6-AE57-21B2ABCF5183 - 1952edaa43472899"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static TodoAppWithRestApi.TodosAPI.searchTodos(searchTerm: Swift.String, page: Swift.Int, completion: (Swift.Result&lt;TodoAppWithRestApi.BaseListResponse&lt;TodoAppWithRestApi.Todo&gt;, TodoAppWithRestApi.TodosAPI.ApiError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "TodoAppWithRestApi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dhui/Desktop/iOS%20Swift/UIKit/TodoAppWithRestApi/TodoAppWithRestApi/API/TodosAPI+Closure.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "226"
+                  endingLineNumber = "226"
+                  offsetFromSymbolStart = "5164">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

@@ -6,8 +6,14 @@
 //
 
 import Foundation
+import Combine
+import RxSwift
+import RxCocoa
+import RxRelay
 
-class TodosVM {
+class TodosVM: ObservableObject {
+    
+    var disposeBag: DisposeBag = DisposeBag()
     
     // 가공된 최종 데이터
     var todos: [Todo] = [] {
@@ -22,17 +28,45 @@ class TodosVM {
     
     init() {
         print(#fileID, #function, #line, "- ")
-        fetchTodos()
+//        fetchTodos()
+//        
+//        TodosAPI.fetchSelectedTodos(selectedTodoIds: [4975, 4974],
+//                                    completion: { result in
+//            switch result {
+//            case .success(let data):
+//                print("TodosVM - fetchSelectedTodos: data: \(data)")
+//            case .failure(let failure):
+//                print("TodosVM - fetchSelectedTodos: failure: \(failure)")
+//            }
+//        })
         
-        TodosAPI.fetchSelectedTodos(selectedTodoIds: [4975, 4974],
-                                    completion: { result in
-            switch result {
-            case .success(let data):
-                print("TodosVM - fetchSelectedTodos: data: \(data)")
-            case .failure(let failure):
-                print("TodosVM - fetchSelectedTodos: failure: \(failure)")
-            }
-        })
+        TodosAPI.fetchTodosWithObservable()
+            .observe(on: MainScheduler.instance)
+            .compactMap { $0.data } // [Todo]
+            .catch { err in
+                print("TodosVM - fetchTodosWithObservable: err : \(err)")
+                return Observable.just([])
+            } // []
+            .subscribe(onNext: { [weak self] (response: [Todo]) in
+                print("TodosVM - fetchTodosWithObservable: response: \(response)")
+            }, onError: { [weak self] failure in
+                self?.handleError(failure)
+            })
+            .disposed(by: disposeBag)
+        
+//        TodosAPI.fetchTodosWithObservableResult()
+//            .observe(on: MainScheduler.instance)
+//            .subscribe(onNext: { [weak self] result in
+//                guard let self = self else { return }
+//                switch result {
+//                case .failure(let failure):
+//                    self.handleError(failure)
+//                case .success(let response):
+//                    print("TodosVM - fetchTodosWithObservale: response: \(response)")
+//                }
+//                
+//            })
+//            .disposed(by: disposeBag)
         
 //        TodosAPI.deleteSelectedTodos(selectedTodoIds: [4983, 4979, 4978, 4977, 4976],
 //                                     completion: { [weak self] deletedTodos in
