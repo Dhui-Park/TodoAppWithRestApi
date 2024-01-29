@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B74D130C2B677B9600EED49B /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74D130B2B677B9600EED49B /* ErrorResponse.swift */; };
 		B755ED3C2B52899D00499F3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B755ED3B2B52899D00499F3F /* AppDelegate.swift */; };
 		B755ED3E2B52899D00499F3F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B755ED3D2B52899D00499F3F /* SceneDelegate.swift */; };
 		B755ED402B52899D00499F3F /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B755ED3F2B52899D00499F3F /* MainVC.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B74D130B2B677B9600EED49B /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		B755ED382B52899D00499F3F /* TodoAppWithRestApi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoAppWithRestApi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B755ED3B2B52899D00499F3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B755ED3D2B52899D00499F3F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				B755ED752B53E52E00499F3F /* TodosResponse.swift */,
+				B74D130B2B677B9600EED49B /* ErrorResponse.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 				B755ED712B52D89900499F3F /* TodosAPI.swift in Sources */,
 				B7AA07192B593DF2000EBE86 /* Nibbed.swift in Sources */,
 				B755ED762B53E52E00499F3F /* TodosResponse.swift in Sources */,
+				B74D130C2B677B9600EED49B /* ErrorResponse.swift in Sources */,
 				B755ED3E2B52899D00499F3F /* SceneDelegate.swift in Sources */,
 				B755ED792B558BC900499F3F /* URL+Ext.swift in Sources */,
 				B7AA07152B56CA05000EBE86 /* TodosAPI+Closure.swift in Sources */,

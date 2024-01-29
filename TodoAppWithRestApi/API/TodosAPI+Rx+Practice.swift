@@ -565,9 +565,10 @@ extension TodosAPI {
                     
                     
                 case 422:
-                    let errMsgRes = try? JSONDecoder().decode(APIErrorResponse.self, from: data)
-                    dump(errMsgRes)
-                    throw ApiError.errMessageFromServer(errMsgRes?.message ?? "")
+                    if let errResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
+                        throw ApiError.errResponseFromServer(errResponse)
+                    }
+                    
                 default:
                     print("default")
                 }

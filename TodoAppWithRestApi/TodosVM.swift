@@ -80,6 +80,9 @@ class TodosVM: ObservableObject {
         }
     }
     
+    // 할일 추가 이벤트
+    var notifyTodoAdded: (() -> Void)? = nil
+    
     // 다음 페이지 여부 이벤트
     var notifyHasNextPage: ((_ hasNext: Bool) -> Void)? = nil
     
@@ -98,6 +101,8 @@ class TodosVM: ObservableObject {
     // 현재 페이지 변경 이벤트
     var notifyCurrentPageChanged: ((Int) -> Void)? = nil
     
+    // 에러 발생 이벤트
+    var notifyErrorOccured: ((_ errMsg: String) -> Void)? = nil
     
     
     init() {
@@ -387,6 +392,33 @@ class TodosVM: ObservableObject {
         
     }
     
+    /// 할일 추가하기
+    /// - Parameter title: 할일 제목
+    func addATodo(_ title: String, isDone: Bool = false) {
+        print(#fileID, #function, #line, "- 할일 추가입니다 title: \(title)")
+        
+        TodosAPI.addATodoAndFetchTodos(title: title, isDone: isDone, completion: { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let response):
+                
+                self.isLoading = false
+                // 페이지 갱신
+                
+                if let fetchedTodos: [Todo] = response.data,
+                   let pageInfo: Meta = response.meta {
+                    self.todos = fetchedTodos
+                    self.pageInfo = pageInfo
+                    self.notifyTodoAdded?()
+                }
+            case .failure(let failure):
+                print("failure: \(failure)")
+                self.isLoading = false
+                self.handleError(failure)
+            }
+        })
+    }
     
     /// 할일 가져오기
     /// - Parameter page: 페이지
@@ -455,9 +487,9 @@ class TodosVM: ObservableObject {
             self.notifySearchDataNotFound?(true)
         case .unauthorized:
             print("인증안됨.")
-        case let .errMessageFromServer(msg):
-            print("\(msg)")
-            self.errorHeardSubject.onNext(msg)
+        case .errResponseFromServer:
+            print("서버에서 온 에러입니다: \(apiError.info)")
+            self.notifyErrorOccured?(apiError.info)
         default:
             print("default")
         }

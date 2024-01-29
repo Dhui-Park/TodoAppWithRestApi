@@ -165,6 +165,24 @@ class MainVC: UIViewController {
             }
         }
         
+        // ViewModel 이벤트 받기 - 할일 추가 완료 이벤트
+        self.todosVM.notifyTodoAdded = { [weak self] in
+            guard let self = self else { return }
+            print(#fileID, #function, #line, "- ")
+            DispatchQueue.main.async {
+                self.myTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            }
+        }
+        
+        // ViewModel 이벤트 받기 - 에러 발생 이벤트
+        self.todosVM.notifyErrorOccured = { [weak self] errMsg in
+            guard let self = self else { return }
+            print(#fileID, #function, #line, "- ")
+            DispatchQueue.main.async {
+                self.showErrAlert(errMsg: errMsg)
+            }
+        }
+        
         
     }// viewDidLoad()
     
@@ -178,13 +196,55 @@ class MainVC: UIViewController {
     
     @IBAction func addATodoBtnClicked(_ sender: UIButton) {
         
-        todosVM.testAddATodo()
-        
+//        todosVM.testAddATodo()
+        showAddTodoAlert()
 //        presentErrorAlert(title: <#T##String#>)
         
         
     }
     
+}
+
+//MARK: - 얼럿
+extension MainVC {
+    
+    
+    /// 할일 추가 얼럿 띄우기
+    fileprivate func showAddTodoAlert() {
+        //1. Create the alert controller.
+        let alert = UIAlertController(title: "추가할 할 일을 입력해주세요.", message: nil, preferredStyle: .alert)
+
+        //2. Add the text field. You can configure it however you need.
+        alert.addTextField { (textField) in
+            textField.placeholder = "빡코딩하기"
+        }
+
+        // 3. Grab the value from the text field, and print it when the user clicks OK.
+        alert.addAction(UIAlertAction(title: "닫기", style: .destructive))
+        
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak alert] (_) in
+            if let userInput = alert?.textFields?[0].text {
+                print("userInput: \(userInput)")
+                self.todosVM.addATodo(userInput)
+            }
+        }))
+        
+
+        // 4. Present the alert.
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    /// 할일 추가 얼럿 띄우기
+    fileprivate func showErrAlert(errMsg: String) {
+        //1. Create the alert controller.
+        let alert = UIAlertController(title: "에러", message: errMsg, preferredStyle: .alert)
+
+        // 3. Grab the value from the text field, and print it when the user clicks OK.
+        alert.addAction(UIAlertAction(title: "닫기", style: .cancel))
+        
+        // 4. Present the alert.
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 //MARK: - Actions

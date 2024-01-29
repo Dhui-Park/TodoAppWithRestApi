@@ -26,7 +26,7 @@ enum TodosAPI {
         case notAllowedUrl
         case badStatus(code: Int)
         case unknown(_ err: Error?)
-        case errMessageFromServer(_ msg: String)
+        case errResponseFromServer(_ errResponse: ErrorResponse?)
         
         var info: String {
             switch self {
@@ -37,7 +37,7 @@ enum TodosAPI {
             case .notAllowedUrl: return "올바른 URL 형식이 아닙니다."
             case let .badStatus(code): return "코드: \(code) 에러입니다."
             case .unknown(let err): return "알 수 없는 에러입니다. \n \(err)"
-            case .errMessageFromServer(let msg): return "서버 에러 메세지: \(msg)"
+            case .errResponseFromServer(let errResponse): return errResponse?.message ?? ""
             }
         }
     }
