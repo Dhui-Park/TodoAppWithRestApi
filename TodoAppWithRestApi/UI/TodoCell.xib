@@ -3,7 +3,6 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -42,9 +41,10 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oYW-OV-ccu">
                                 <rect key="frame" x="61" y="0.0" width="59" height="34.333333333333336"/>
-                                <color key="tintColor" systemColor="systemPurpleColor"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="삭제"/>
+                                <buttonConfiguration key="configuration" style="filled" title="삭제">
+                                    <color key="baseBackgroundColor" systemColor="systemPurpleColor"/>
+                                </buttonConfiguration>
                                 <connections>
                                     <action selector="onDeleteBtnClicked:" destination="5no-q7-Eps" eventType="touchUpInside" id="8II-Ph-dQr"/>
                                 </connections>

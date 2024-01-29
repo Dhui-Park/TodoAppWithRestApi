@@ -208,7 +208,6 @@ class MainVC: UIViewController {
 //MARK: - 얼럿
 extension MainVC {
     
-    
     /// 할일 추가 얼럿 띄우기
     fileprivate func showAddTodoAlert() {
         //1. Create the alert controller.
@@ -234,13 +233,30 @@ extension MainVC {
         self.present(alert, animated: true, completion: nil)
     }
     
-    /// 할일 추가 얼럿 띄우기
+    /// 할일 추가시 에러 얼럿 띄우기
     fileprivate func showErrAlert(errMsg: String) {
         //1. Create the alert controller.
         let alert = UIAlertController(title: "에러", message: errMsg, preferredStyle: .alert)
 
         // 3. Grab the value from the text field, and print it when the user clicks OK.
         alert.addAction(UIAlertAction(title: "닫기", style: .cancel))
+        
+        // 4. Present the alert.
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    /// 할일 삭제 얼럿 띄우기
+    fileprivate func showDeleteTodoAlert(_ id: Int) {
+        //1. Create the alert controller.
+        let alert = UIAlertController(title: "삭제", message: "id: \(id)를 삭제하시겠습니까?", preferredStyle: .alert)
+
+        // 3. Grab the value from the text field, and print it when the user clicks OK.
+        alert.addAction(UIAlertAction(title: "닫기", style: .cancel))
+        
+        alert.addAction(UIAlertAction(title: "삭제", style: .default, handler: { _ in
+            // 뷰모델에서 해당 할일 삭제
+            self.todosVM.deleteATodo(id: id)
+        }))
         
         // 4. Present the alert.
         self.present(alert, animated: true, completion: nil)
@@ -257,6 +273,11 @@ extension MainVC {
         
         // ViewModel에게 시키기
         self.todosVM.fetchRefresh()
+    }
+    
+    fileprivate func onDeleteItemAction(_ id: Int) {
+        print(#fileID, #function, #line, "- id: \(id)")
+        self.showDeleteTodoAlert(id)
     }
     
     /// 검색어가 입력되었다
@@ -323,6 +344,8 @@ extension MainVC: UITableViewDataSource {
         
         // data 셀에 넣어주기
         cell.updateUI(cellData)
+        
+        cell.onDeleteActionEvent = onDeleteItemAction
         
         return cell
     }

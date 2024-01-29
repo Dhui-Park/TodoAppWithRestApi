@@ -18,6 +18,8 @@ class TodoCell: UITableViewCell {
     
     var cellData: Todo? = nil
     
+    var onDeleteActionEvent: ((Int) -> Void)? = nil
+    
     
     /// 셀 데이터 적용
     /// - Parameter cellData: Todo
@@ -45,6 +47,11 @@ class TodoCell: UITableViewCell {
     
     @IBAction func onDeleteBtnClicked(_ sender: UIButton) {
         print(#fileID, #function, #line, "- ")
+        
+        guard let id = cellData?.id else { return }
+        
+        self.onDeleteActionEvent?(id)
+        
     }
     
     

@@ -363,8 +363,6 @@ class TodosVM: ObservableObject {
             })
         })
         
-        
-        
     }
     
     func fetchRefresh() {
@@ -397,6 +395,13 @@ class TodosVM: ObservableObject {
     func addATodo(_ title: String, isDone: Bool = false) {
         print(#fileID, #function, #line, "- 할일 추가입니다 title: \(title)")
         
+        if isLoading {
+            print("로딩중입니다.")
+            return
+        }
+        
+        self.isLoading = true
+        
         TodosAPI.addATodoAndFetchTodos(title: title, isDone: isDone, completion: { [weak self] result in
             guard let self = self else { return }
             
@@ -411,6 +416,43 @@ class TodosVM: ObservableObject {
                     self.todos = fetchedTodos
                     self.pageInfo = pageInfo
                     self.notifyTodoAdded?()
+                }
+            case .failure(let failure):
+                print("failure: \(failure)")
+                self.isLoading = false
+                self.handleError(failure)
+            }
+        })
+    }
+    
+    /// 단일 할일 삭제
+    /// - Parameter id: 삭제할 아이디
+    func deleteATodo(id: Int) {
+        print(#fileID, #function, #line, "- id: \(id)")
+        
+        if isLoading {
+            print("로딩중입니다.")
+            return
+        }
+        
+        self.isLoading = true
+        
+        TodosAPI.deleteATodo(id: id, completion: { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let response):
+                
+                self.isLoading = false
+                // 페이지 갱신
+                
+                if let deletedTodo: Todo = response.data,
+                   let deletedTodoId: Int = deletedTodo.id {
+                    
+                    // 삭제된 아이템 찾아서 그 녀석만 현재 리스트에서 지우기
+                    
+                    self.todos = self.todos.filter { $0.id ?? 0 != deletedTodoId }
+               
                 }
             case .failure(let failure):
                 print("failure: \(failure)")
