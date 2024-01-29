@@ -60,6 +60,24 @@ class MainVC: UIViewController {
         return view
     }()
     
+    // 가져올 데이터가 없을 때의 뷰
+    lazy var bottomNoMoreDataView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: myTableView.bounds.width, height: 60))
+        
+        let label = UILabel()
+        label.text = "더 이상 가져올 데이터가 없습니다 🙀"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        return view
+    }()
+    
     var searchTermInputWorkItem: DispatchWorkItem? = nil
     
     var disposeBag: DisposeBag = DisposeBag()
@@ -136,6 +154,14 @@ class MainVC: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.myTableView.backgroundView = notFound ? self.searchDataNotFoundView : nil
+            }
+        }
+        
+        // ViewModel 이벤트 받기 - 다음 페이지 여부
+        self.todosVM.notifyHasNextPage = { [weak self] hasNext in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.myTableView.tableFooterView = !hasNext ? self.bottomNoMoreDataView : nil
             }
         }
         

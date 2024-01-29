@@ -50,10 +50,26 @@ class TodosVM: ObservableObject {
     // sub 2
     var errorMsgInfoSecondObservable : Observable<String> = Observable.empty()
     
-    var currentPage: Int = 1 {
+    var pageInfo: Meta? = nil {
         didSet {
-            print(#fileID, #function, #line, "- ")
+            print(#fileID, #function, #line, "- pageInfo: \(pageInfo)")
+            
+            // 다음 페이지 여부 이벤트 보내기
+            self.notifyHasNextPage?(pageInfo?.hasNext() ?? true)
+            
+            // 현재 페이지 변경 이벤트 보내기
             self.notifyCurrentPageChanged?(currentPage)
+        }
+    }
+    
+    var currentPage: Int {
+        get {
+            if let pageInfo = self.pageInfo,
+               let currentPage = pageInfo.currentPage {
+                return currentPage
+            } else {
+                return 1
+            }
         }
     }
     
@@ -63,6 +79,9 @@ class TodosVM: ObservableObject {
             self.notifyLoadingStateChanged?(isLoading)
         }
     }
+    
+    // 다음 페이지 여부 이벤트
+    var notifyHasNextPage: ((_ hasNext: Bool) -> Void)? = nil
     
     // 검색결과 없음 여부 이벤트
     var notifySearchDataNotFound: ((_ noContent: Bool) -> Void)? = nil
@@ -285,6 +304,7 @@ class TodosVM: ObservableObject {
         
         if searchTerm.count < 1 {
             print("검색어가 없습니다.")
+            self.fetchTodos()
             return
         }
         
@@ -293,9 +313,15 @@ class TodosVM: ObservableObject {
             return
         }
         
+        guard pageInfo?.hasNext() ?? true else {
+            return print("다음 페이지 없다~")
+        }
+        
         self.notifySearchDataNotFound?(false)
         
-        self.todos = []
+        if page == 1 {
+            self.todos = []
+        }
         
         
         isLoading = true
@@ -311,22 +337,24 @@ class TodosVM: ObservableObject {
                 switch result {
                 case .success(let response):
                     
+                    self.isLoading = false
                     // 페이지 갱신
-                    self.currentPage = page
-                    if let fetchedTodos: [Todo] = response.data {
-                        
+                    if let fetchedTodos: [Todo] = response.data,
+                       let pageInfo: Meta = response.meta {
                         if page == 1 {
                             self.todos = fetchedTodos
                         } else {
                             self.todos.append(contentsOf: fetchedTodos)
                         }
+                        self.pageInfo = pageInfo
                     }
                 case .failure(let failure):
                     print("failure: \(failure)")
                     self.handleError(failure)
+                    self.isLoading = false
                 }
                 self.notifyRefreshEnded?()
-                self.isLoading = false
+                
             })
         })
         
@@ -342,7 +370,21 @@ class TodosVM: ObservableObject {
     /// 할일 더 가져오기
     func fetchMore() {
         print(#fileID, #function, #line, "- ")
-        self.fetchTodos(page: currentPage + 1)
+        
+        guard let pageInfo = pageInfo,
+              pageInfo.hasNext(),
+              !isLoading
+        else {
+            return print("다음 페이지가 없다.")
+        }
+        
+        
+        if searchTerm.count > 0 { // 검색어가 있으면
+            self.searchTodos(searchTerm: searchTerm, page: self.currentPage + 1)
+        } else {
+            self.fetchTodos(page: currentPage + 1)
+        }
+        
     }
     
     
@@ -368,20 +410,26 @@ class TodosVM: ObservableObject {
                 case .success(let response):
                     
                     // 페이지 갱신
-                    self.currentPage = page
-                    if let fetchedTodos: [Todo] = response.data {
+                    
+                    if let fetchedTodos: [Todo] = response.data,
+                       let pageInfo: Meta = response.meta {
+                        
+                        self.isLoading = false
                         
                         if page == 1 {
                             self.todos = fetchedTodos
                         } else {
                             self.todos.append(contentsOf: fetchedTodos)
                         }
+                        self.pageInfo = pageInfo
+                        
                     }
                 case .failure(let failure):
                     print("failure: \(failure)")
+                    self.isLoading = false
                 }
                 self.notifyRefreshEnded?()
-                self.isLoading = false
+                
             })
         })
         

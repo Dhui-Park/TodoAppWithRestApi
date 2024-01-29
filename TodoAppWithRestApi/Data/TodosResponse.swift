@@ -56,5 +56,17 @@ struct Meta: Codable {
         case perPage = "per_page"
         case to, total
     }
+    
+    
+    /// 다음 페이지가 있는지 여부
+    /// - Returns: 다음 페이지 존재 여부
+    func hasNext() -> Bool {
+        guard let current = currentPage,
+              let last = lastPage else {
+            print("current, last 정보 없음")
+            return false
+        }
+        return current < last
+    }
 }
 
