@@ -26,7 +26,7 @@
 		B76BF1B42B613F8C00A8081D /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = B76BF1B32B613F8C00A8081D /* RxRelay */; };
 		B76BF1B62B613F8C00A8081D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B76BF1B52B613F8C00A8081D /* RxSwift */; };
 		B76BF1B82B6141E600A8081D /* TodosAPI+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76BF1B72B6141E600A8081D /* TodosAPI+Rx.swift */; };
-		B76BF1BA2B616D2500A8081D /* TodosAPI+Rx+Practice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76BF1B92B616D2500A8081D /* TodosAPI+Rx+Practice.swift */; };
+		B76BF1BC2B61723800A8081D /* TodosAPI+Rx+Practice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76BF1BB2B61723800A8081D /* TodosAPI+Rx+Practice.swift */; };
 		B7AA07112B565C27000EBE86 /* MultipartForm in Frameworks */ = {isa = PBXBuildFile; productRef = B7AA07102B565C27000EBE86 /* MultipartForm */; };
 		B7AA07132B56BA0D000EBE86 /* URLRequest+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA07122B56BA0D000EBE86 /* URLRequest+Ext.swift */; };
 		B7AA07152B56CA05000EBE86 /* TodosAPI+Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AA07142B56CA05000EBE86 /* TodosAPI+Closure.swift */; };
@@ -73,7 +73,7 @@
 		B755ED752B53E52E00499F3F /* TodosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosResponse.swift; sourceTree = "<group>"; };
 		B755ED782B558BC900499F3F /* URL+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Ext.swift"; sourceTree = "<group>"; };
 		B76BF1B72B6141E600A8081D /* TodosAPI+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodosAPI+Rx.swift"; sourceTree = "<group>"; };
-		B76BF1B92B616D2500A8081D /* TodosAPI+Rx+Practice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodosAPI+Rx+Practice.swift"; sourceTree = "<group>"; };
+		B76BF1BB2B61723800A8081D /* TodosAPI+Rx+Practice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodosAPI+Rx+Practice.swift"; sourceTree = "<group>"; };
 		B7AA07122B56BA0D000EBE86 /* URLRequest+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Ext.swift"; sourceTree = "<group>"; };
 		B7AA07142B56CA05000EBE86 /* TodosAPI+Closure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodosAPI+Closure.swift"; sourceTree = "<group>"; };
 		B7AA07162B593DC6000EBE86 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 				B755ED702B52D89900499F3F /* TodosAPI.swift */,
 				B7AA07142B56CA05000EBE86 /* TodosAPI+Closure.swift */,
 				B76BF1B72B6141E600A8081D /* TodosAPI+Rx.swift */,
-				B76BF1B92B616D2500A8081D /* TodosAPI+Rx+Practice.swift */,
+				B76BF1BB2B61723800A8081D /* TodosAPI+Rx+Practice.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -349,9 +349,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B76BF1B82B6141E600A8081D /* TodosAPI+Rx.swift in Sources */,
-				B76BF1BA2B616D2500A8081D /* TodosAPI+Rx+Practice.swift in Sources */,
 				B755ED402B52899D00499F3F /* MainVC.swift in Sources */,
 				B755ED3C2B52899D00499F3F /* AppDelegate.swift in Sources */,
+				B76BF1BC2B61723800A8081D /* TodosAPI+Rx+Practice.swift in Sources */,
 				B755ED712B52D89900499F3F /* TodosAPI.swift in Sources */,
 				B7AA07192B593DF2000EBE86 /* Nibbed.swift in Sources */,
 				B755ED762B53E52E00499F3F /* TodosResponse.swift in Sources */,
