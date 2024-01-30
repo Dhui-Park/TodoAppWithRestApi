@@ -25,7 +25,7 @@ class MainVC: UIViewController {
     
     var todos: [Todo] = []
     
-    var todosVM: TodosVM = TodosVM()
+    var todosVM: TodosVM_Rx = TodosVM_Rx()
     
     // bottom indicator view
     lazy var bottomIndicator: UIActivityIndicatorView = {
