@@ -5,8 +5,10 @@
 //  Created by dhui on 1/13/24.
 //
 
+import Foundation
 import UIKit
 import RxSwift
+import RxRelay
 import RxCocoa
 
 
@@ -122,14 +124,16 @@ class MainVC: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        // ViewModel 이벤트 받기 - View&ViewModel 묶기
-        self.todosVM.notifyTodosChanged = { [weak self] updatedTodos in
-            guard let self = self else { return }
-            self.todos = updatedTodos
-            DispatchQueue.main.async {
-                self.myTableView.reloadData()
-            }
-        }
+        // ViewModel 이벤트 받기 - View&ViewModel 묶기 - RxSwift
+        self.todosVM
+            .todos
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { mainVC, updatedTodos in
+                mainVC.todos = updatedTodos
+                mainVC.myTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
         
         // ViewModel 이벤트 받기 - Page 변경
         self.todosVM.notifyCurrentPageChanged = { [weak self] currentPage in
@@ -364,7 +368,7 @@ extension MainVC {
                     guard let userInput: String = sender.text,
                           let self = self else { return }
                     print(#fileID, #function, #line, "- 검색 API 호출하기 userInput: \(userInput)")
-                    self.todosVM.todos = []
+                    self.todosVM.todos.accept([])
                     // ViewModel 검색어 갱신
                     self.todosVM.searchTerm = userInput
                 }

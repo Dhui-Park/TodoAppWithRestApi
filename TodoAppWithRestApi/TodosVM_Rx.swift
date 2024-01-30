@@ -13,15 +13,14 @@ import RxCocoa
 
 class TodosVM_Rx: ObservableObject {
     
+    // 1. Observable
+    // 2. BehaviorRelay - .value로 마지막에 보낸 데이터를 알 수 있다.
+    // 3. PublishRelay
+    
     var disposeBag: DisposeBag = DisposeBag()
     
     // 가공된 최종 데이터
-    var todos: [Todo] = [] {
-        didSet {
-            print(#fileID, #function, #line, "- ")
-            self.notifyTodosChanged?(todos)
-        }
-    }
+    var todos: BehaviorRelay<[Todo]> = BehaviorRelay<[Todo]>(value: [])
     
     
     /// 검색어
@@ -101,9 +100,6 @@ class TodosVM_Rx: ObservableObject {
     // 로딩중 여부 변경 이벤트
     var notifyLoadingStateChanged: ((_ isLoading: Bool) -> Void)? = nil
     
-    // 데이터 변경 이벤트
-    var notifyTodosChanged: (([Todo]) -> Void)? = nil
-    
     // 현재 페이지 변경 이벤트
     var notifyCurrentPageChanged: ((Int) -> Void)? = nil
     
@@ -175,7 +171,7 @@ class TodosVM_Rx: ObservableObject {
         self.notifySearchDataNotFound?(false)
         
         if page == 1 {
-            self.todos = []
+            self.todos.accept([])
         }
         
         
@@ -197,9 +193,11 @@ class TodosVM_Rx: ObservableObject {
                     if let fetchedTodos: [Todo] = response.data,
                        let pageInfo: Meta = response.meta {
                         if page == 1 {
-                            self.todos = fetchedTodos
+                            self.todos.accept(fetchedTodos)
                         } else {
-                            self.todos.append(contentsOf: fetchedTodos)
+                            let addedTodos = self.todos.value + fetchedTodos
+                            
+                            self.todos.accept(addedTodos)
                         }
                         self.pageInfo = pageInfo
                     }
@@ -263,7 +261,7 @@ class TodosVM_Rx: ObservableObject {
                 
                 if let fetchedTodos: [Todo] = response.data,
                    let pageInfo: Meta = response.meta {
-                    self.todos = fetchedTodos
+                    self.todos.accept(fetchedTodos)
                     self.pageInfo = pageInfo
                     self.notifyTodoAdded?()
                 }
@@ -299,10 +297,12 @@ class TodosVM_Rx: ObservableObject {
                 
                 if let editedTodo: Todo = response.data,
                    let editedTodoId: Int = editedTodo.id,
-                   let editedIndex = self.todos.firstIndex(where: { $0.id ?? 0 == editedTodoId }){
+                   let editedIndex = self.todos.value.firstIndex(where: { $0.id ?? 0 == editedTodoId }){
                     
-                    self.todos[editedIndex] = editedTodo
+                    var currentTodos = self.todos.value
+                    currentTodos[editedIndex] = editedTodo
                
+                    self.todos.accept(currentTodos)
                 }
             case .failure(let failure):
                 print("failure: \(failure)")
@@ -340,8 +340,8 @@ class TodosVM_Rx: ObservableObject {
                     
                     // 삭제된 아이템 찾아서 그 녀석만 현재 리스트에서 지우기
                     
-                    self.todos = self.todos.filter { $0.id ?? 0 != deletedTodoId }
-               
+                    let filteredTodos = self.todos.value.filter { $0.id ?? 0 != deletedTodoId }
+                    self.todos.accept(filteredTodos)
                 }
             case .failure(let failure):
                 print("failure: \(failure)")
@@ -372,7 +372,8 @@ class TodosVM_Rx: ObservableObject {
             guard let self = self else { return }
             
             // 삭제된 아이템 찾아서 그 녀석만 현재 리스트에서 지우기
-            self.todos = self.todos.filter { !deletedTodoIds.contains($0.id ?? 0) }
+            let filteredTodos = self.todos.value.filter { !deletedTodoIds.contains($0.id ?? 0) }
+            self.todos.accept(filteredTodos)
             
             self.selectedTodoIds = self.selectedTodoIds.filter { !deletedTodoIds.contains($0) }
             
@@ -411,9 +412,12 @@ class TodosVM_Rx: ObservableObject {
                         self.isLoading = false
                         
                         if page == 1 {
-                            self.todos = fetchedTodos
+                            self.todos.accept(fetchedTodos)
                         } else {
-                            self.todos.append(contentsOf: fetchedTodos)
+                            
+                            let addedTodos = self.todos.value + fetchedTodos
+                            
+                            self.todos.accept(addedTodos)
                         }
                         self.pageInfo = pageInfo
                         
