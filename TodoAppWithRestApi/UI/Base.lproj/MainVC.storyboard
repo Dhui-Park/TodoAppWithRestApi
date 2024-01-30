@@ -78,9 +78,11 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="deleteSelectedTodosBtn" destination="mAe-Rb-TWm" id="ITy-Mk-hsq"/>
                         <outlet property="myTableView" destination="mPA-do-XIc" id="P1M-XL-Mx8"/>
                         <outlet property="pageInfoLabel" destination="hbO-KR-8g0" id="3Ol-DA-qfz"/>
                         <outlet property="searchBar" destination="2Ky-mp-jpZ" id="u4W-IE-VgE"/>
+                        <outlet property="selectedTodosInfoLabel" destination="amB-xd-MLd" id="yNj-cP-ztA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

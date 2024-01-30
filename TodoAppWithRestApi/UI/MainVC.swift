@@ -17,6 +17,10 @@ class MainVC: UIViewController {
     
     @IBOutlet weak var pageInfoLabel: UILabel!
     
+    @IBOutlet weak var selectedTodosInfoLabel: UILabel!
+    
+    @IBOutlet weak var deleteSelectedTodosBtn: UIButton!
+    
     @IBOutlet weak var searchBar: UISearchBar!
     
     var todos: [Todo] = []
@@ -98,6 +102,8 @@ class MainVC: UIViewController {
         
         // 서치바 설정
         self.searchBar.searchTextField.addTarget(self, action: #selector(searchTermChanged(_:)), for: .editingChanged)
+        
+        self.deleteSelectedTodosBtn.addTarget(self, action: #selector(onDeleteSelectedTodosBtnClicked(_:)), for: .touchUpInside)
         
         todosVM.errorMsgInfoObservable
             .observe(on: MainScheduler.instance)
@@ -183,6 +189,18 @@ class MainVC: UIViewController {
             }
         }
         
+        // ViewModel 이벤트 받기 - 선택된 할일들 변경 이벤트
+        self.todosVM.notifySelectedTodoIdsChanged = { [weak self] selectedTodoIds in
+            guard let self = self else { return }
+            print(#fileID, #function, #line, "- ")
+            DispatchQueue.main.async {
+                
+                let idsInfoString = selectedTodoIds.map { "\($0)" }.joined(separator: ", ")
+                
+                self.selectedTodosInfoLabel.text = "선택된 할일: [" + idsInfoString + "]"
+            }
+        }
+        
         
     }// viewDidLoad()
     
@@ -228,7 +246,6 @@ extension MainVC {
             }
         }))
         
-
         // 4. Present the alert.
         self.present(alert, animated: true, completion: nil)
     }
@@ -261,6 +278,30 @@ extension MainVC {
         // 4. Present the alert.
         self.present(alert, animated: true, completion: nil)
     }
+    
+    /// 할일 수정 얼럿 띄우기
+    fileprivate func showEditTodoAlert(_ id: Int, _ existingTitle: String) {
+        //1. Create the alert controller.
+        let alert = UIAlertController(title: "id: \(id) 수정", message: nil, preferredStyle: .alert)
+
+        //2. Add the text field. You can configure it however you need.
+        alert.addTextField { (textField) in
+            textField.text = existingTitle
+        }
+
+        // 3. Grab the value from the text field, and print it when the user clicks OK.
+        alert.addAction(UIAlertAction(title: "닫기", style: .destructive))
+        
+        alert.addAction(UIAlertAction(title: "수정", style: .default, handler: { [weak alert] (_) in
+            if let userInput = alert?.textFields?[0].text {
+                print("userInput: \(userInput)")
+                self.todosVM.editATodo(id, userInput)
+            }
+        }))
+        
+        // 4. Present the alert.
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 //MARK: - Actions
@@ -275,13 +316,41 @@ extension MainVC {
         self.todosVM.fetchRefresh()
     }
     
+    
+    /// 쎌의 삭제버튼 눌렀을때
+    /// - Parameter id: 삭제할 아이템의 아이디
     fileprivate func onDeleteItemAction(_ id: Int) {
         print(#fileID, #function, #line, "- id: \(id)")
         self.showDeleteTodoAlert(id)
     }
     
+    /// 쏄의 수정버튼 눌렀을때
+    /// - Parameters:
+    ///   - id: 수정할 아이템 아이디
+    ///   - editedTitle: 수정할 타이틀
+    fileprivate func onEditItemAction(_ id: Int, _ editedTitle: String) {
+        print(#fileID, #function, #line, "- id: \(id), editedTitle: \(editedTitle)")
+        self.showEditTodoAlert(id, editedTitle)
+    }
+    
+    
+    /// 쎌의 선택 여부
+    /// - Parameters:
+    ///   - id: 선택한 쏄의 아이디
+    ///   - isOn: 선택 여부
+    fileprivate func onSelectionItemAction(_ id: Int, _ isOn: Bool) {
+        print(#fileID, #function, #line, "- id: \(id), isOn: \(isOn)")
+        #warning("TODO: - 선택된 요소 변경")
+        self.todosVM.handleTodoSelection(id, isOn)
+    }
+    
+    @objc fileprivate func onDeleteSelectedTodosBtnClicked(_ sender: UIButton) {
+        print(#fileID, #function, #line, "- ")
+        self.todosVM.deleteSelectedTodos()
+    }
+    
     /// 검색어가 입력되었다
-    /// - Parameter sender: <#sender description#>
+    /// - Parameter sender: UITextField
     @objc fileprivate func searchTermChanged(_ sender: UITextField) {
 //        print(#fileID, #function, #line, "- sender: \(sender.text)")
         
@@ -343,9 +412,13 @@ extension MainVC: UITableViewDataSource {
         let cellData = self.todos[indexPath.row]
         
         // data 셀에 넣어주기
-        cell.updateUI(cellData)
+        cell.updateUI(cellData, selectedTodoIds: self.todosVM.selectedTodoIds)
         
         cell.onDeleteActionEvent = onDeleteItemAction
+        
+        cell.onEditActionEvent = onEditItemAction
+        
+        cell.onSelectedActionEvent = onSelectionItemAction
         
         return cell
     }

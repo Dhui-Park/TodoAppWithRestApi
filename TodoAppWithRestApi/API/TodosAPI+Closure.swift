@@ -657,9 +657,7 @@ extension TodosAPI {
             
         }.resume()
         
-        
     }
-    
     
     /// 할일 추가 후 모든 할일 가져오기
     /// - Parameters:
@@ -675,6 +673,38 @@ extension TodosAPI {
             switch $0 {
             case .success(_):
                 self.fetchTodos(completion: {
+                    switch $0 {
+                    case .success(let data):
+                        completion(.success(data))
+                    case .failure(let failure):
+                        completion(.failure(failure))
+                    }
+                })
+            case .failure(let failure):
+                completion(.failure(failure))
+            }
+        })
+        
+    }
+    
+    
+    /// 할일 수정 후 해당 데이터 fetch
+    /// - Parameters:
+    ///   - id: <#id description#>
+    ///   - title: <#title description#>
+    ///   - isDone: <#isDone description#>
+    ///   - completion: <#completion description#>
+    static func editATodoAndFetchATodo(id: Int,
+                                      title: String,
+                                      isDone: Bool = false,
+                                      completion: @escaping (Result<BaseResponse<Todo>, ApiError>) -> Void) {
+        
+        self.editATodo(id: id,
+                       title: title,
+                      completion: {
+            switch $0 {
+            case .success(_):
+                self.fetchATodo(id: id, completion: {
                     switch $0 {
                     case .success(let data):
                         completion(.success(data))

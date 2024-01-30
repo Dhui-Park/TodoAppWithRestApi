@@ -62,6 +62,13 @@ class TodosVM: ObservableObject {
         }
     }
     
+    var selectedTodoIds: Set<Int> = [] {
+        didSet {
+            print(#fileID, #function, #line, "- selectedTodoIds: \(selectedTodoIds)")
+            self.notifySelectedTodoIdsChanged?(Array(selectedTodoIds))
+        }
+    }
+    
     var currentPage: Int {
         get {
             if let pageInfo = self.pageInfo,
@@ -103,6 +110,9 @@ class TodosVM: ObservableObject {
     
     // 에러 발생 이벤트
     var notifyErrorOccured: ((_ errMsg: String) -> Void)? = nil
+    
+    // 선택된 할일들 변경 이벤트
+    var notifySelectedTodoIdsChanged: ((_ selectedIds: [Int]) -> Void)? = nil
     
     
     init() {
@@ -287,6 +297,19 @@ class TodosVM: ObservableObject {
         
     } // init
     
+    
+    /// 선택된 할일들 처리
+    /// - Parameters:
+    ///   - selectedTodoid:
+    ///   - isOn:
+    func handleTodoSelection(_ selectedTodoid: Int, _ isOn: Bool) {
+        if isOn {
+            self.selectedTodoIds.insert(selectedTodoid)
+        } else {
+            self.selectedTodoIds.remove(selectedTodoid)
+        }
+    }
+    
     func testAddATodo() {
         TodosAPI.addATodoJsonWithObservablePractice(title: "아쿠라", isDone: true)
             .observe(on: MainScheduler.instance)
@@ -425,6 +448,45 @@ class TodosVM: ObservableObject {
         })
     }
     
+    
+    /// 할일 추가하기
+    /// - Parameter title: 할일 제목
+    func editATodo(_ id: Int, _ editedTitle: String) {
+        print(#fileID, #function, #line, "- 할일 추가입니다 editedTitle: \(editedTitle)")
+        
+        if isLoading {
+            print("로딩중입니다.")
+            return
+        }
+        
+        self.isLoading = true
+        
+        TodosAPI.editATodo(id: id, title: editedTitle, completion: { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let response):
+                
+                self.isLoading = false
+                // 페이지 갱신
+                
+                if let editedTodo: Todo = response.data,
+                   let editedTodoId: Int = editedTodo.id,
+                   let editedIndex = self.todos.firstIndex(where: { $0.id ?? 0 == editedTodoId }){
+                    
+                    self.todos[editedIndex] = editedTodo
+               
+                }
+            case .failure(let failure):
+                print("failure: \(failure)")
+                self.isLoading = false
+                self.handleError(failure)
+            }
+            
+        })
+    }
+    
+    
     /// 단일 할일 삭제
     /// - Parameter id: 삭제할 아이디
     func deleteATodo(id: Int) {
@@ -461,6 +523,37 @@ class TodosVM: ObservableObject {
             }
         })
     }
+    
+    /// 선택된 할일들 삭제
+    /// - Parameter id: 삭제할 아이디
+    func deleteSelectedTodos() {
+        print(#fileID, #function, #line, "-")
+        
+        if self.selectedTodoIds.count < 1 {
+            self.notifyErrorOccured?("선택된 할일들이 없습니다.")
+            return
+        }
+        
+        if isLoading {
+            print("로딩중입니다.")
+            return
+        }
+        
+        self.isLoading = true
+        
+        TodosAPI.deleteSelectedTodos(selectedTodoIds: Array(self.selectedTodoIds), completion: { [weak self] deletedTodoIds in
+            guard let self = self else { return }
+            
+            // 삭제된 아이템 찾아서 그 녀석만 현재 리스트에서 지우기
+            self.todos = self.todos.filter { !deletedTodoIds.contains($0.id ?? 0) }
+            
+            self.selectedTodoIds = self.selectedTodoIds.filter { !deletedTodoIds.contains($0) }
+            
+            self.isLoading = false
+        })
+    }
+        
+        
     
     /// 할일 가져오기
     /// - Parameter page: 페이지
