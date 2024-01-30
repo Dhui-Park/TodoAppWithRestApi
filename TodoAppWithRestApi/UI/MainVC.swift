@@ -96,20 +96,20 @@ class MainVC: UIViewController {
         
         /// tableView 설정
         self.myTableView.register(TodoCell.uinib, forCellReuseIdentifier: TodoCell.reuseIdentifier)
-//        self.myTableView.dataSource = self
-        self.myTableView.delegate = self
         self.myTableView.tableFooterView = bottomIndicator
         self.myTableView.refreshControl = refreshControl
         
+        // tableView 바닥 감지 이벤트
+        self.myTableView.rx.isNearBottom // Observable<Void>
+            .bind(onNext: self.todosVM.fetchMore)
+            .disposed(by: disposeBag)
         
         // 서치바 설정
-        
         searchBar.searchTextField.rx.text.orEmpty
             .debug("🌙")
             .bind(onNext: self.todosVM.searchTerm.accept(_:))
             .disposed(by: disposeBag)
         
-//        self.searchBar.searchTextField.addTarget(self, action: #selector(searchTermChanged(_:)), for: .editingChanged)
         
         self.deleteSelectedTodosBtn.addTarget(self, action: #selector(onDeleteSelectedTodosBtnClicked(_:)), for: .touchUpInside)
         
@@ -371,55 +371,4 @@ extension MainVC {
         self.todosVM.deleteSelectedTodos()
     }
     
-    /// 검색어가 입력되었다
-    /// - Parameter sender: UITextField
-//    @objc fileprivate func searchTermChanged(_ sender: UITextField) {
-////        print(#fileID, #function, #line, "- sender: \(sender.text)")
-//        
-//        // 검색어가 입력되면 기존 작업 취소
-//        searchTermInputWorkItem?.cancel()
-//        
-//        let dispatchWorkItem = DispatchWorkItem(block: {
-//            // 백그라운드 - 사용자 입력 userInteractive
-//            DispatchQueue.global(qos: .userInteractive).async {
-//                DispatchQueue.main.async { [weak self] in
-//                    guard let userInput: String = sender.text,
-//                          let self = self else { return }
-//                    print(#fileID, #function, #line, "- 검색 API 호출하기 userInput: \(userInput)")
-//                    self.todosVM.todos.accept([])
-//                    // ViewModel 검색어 갱신
-//                    self.todosVM.searchTerm = userInput
-//                }
-//            }
-//        })
-//        
-//        // 기존 작업 취소하기 위해 메모리 주소 일치시켜줌
-//        self.searchTermInputWorkItem = dispatchWorkItem
-//        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7, execute: dispatchWorkItem)
-//    }
-//    
 }
-
-extension MainVC: UITableViewDelegate {
-    
-    
-    /// scroll이 되었다는 이벤트를 알려준다
-    /// - Parameter scrollView: UIScrollView
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        print(#fileID, #function, #line, "- ")
-        
-        let height = scrollView.frame.size.height
-        let contentYOffset = scrollView.contentOffset.y
-        let distanceFromBottom = scrollView.contentSize.height - contentYOffset
-        
-        if distanceFromBottom - 200 < height {
-            print("바닥에 도달했다!")
-            self.todosVM.fetchMore()
-        }
-    }
-    
-}
-
-
-

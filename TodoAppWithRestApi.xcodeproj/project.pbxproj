@@ -10,6 +10,7 @@
 		B74D130C2B677B9600EED49B /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74D130B2B677B9600EED49B /* ErrorResponse.swift */; };
 		B74D130E2B68E56000EED49B /* TodosVM_Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74D130D2B68E56000EED49B /* TodosVM_Rx.swift */; };
 		B74D13102B6913B600EED49B /* Optional+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74D130F2B6913B600EED49B /* Optional+Ext.swift */; };
+		B74D13122B695BE700EED49B /* UIScrollView+Reactive.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74D13112B695BE700EED49B /* UIScrollView+Reactive.swift */; };
 		B755ED3C2B52899D00499F3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B755ED3B2B52899D00499F3F /* AppDelegate.swift */; };
 		B755ED3E2B52899D00499F3F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B755ED3D2B52899D00499F3F /* SceneDelegate.swift */; };
 		B755ED402B52899D00499F3F /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B755ED3F2B52899D00499F3F /* MainVC.swift */; };
@@ -59,6 +60,7 @@
 		B74D130B2B677B9600EED49B /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		B74D130D2B68E56000EED49B /* TodosVM_Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosVM_Rx.swift; sourceTree = "<group>"; };
 		B74D130F2B6913B600EED49B /* Optional+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Ext.swift"; sourceTree = "<group>"; };
+		B74D13112B695BE700EED49B /* UIScrollView+Reactive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Reactive.swift"; sourceTree = "<group>"; };
 		B755ED382B52899D00499F3F /* TodoAppWithRestApi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoAppWithRestApi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B755ED3B2B52899D00499F3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B755ED3D2B52899D00499F3F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				B7AA07182B593DF2000EBE86 /* Nibbed.swift */,
 				B7AA071A2B593E09000EBE86 /* ReuseIdentifiable.swift */,
 				B74D130F2B6913B600EED49B /* Optional+Ext.swift */,
+				B74D13112B695BE700EED49B /* UIScrollView+Reactive.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				B74D130C2B677B9600EED49B /* ErrorResponse.swift in Sources */,
 				B755ED3E2B52899D00499F3F /* SceneDelegate.swift in Sources */,
 				B755ED792B558BC900499F3F /* URL+Ext.swift in Sources */,
+				B74D13122B695BE700EED49B /* UIScrollView+Reactive.swift in Sources */,
 				B7AA07152B56CA05000EBE86 /* TodosAPI+Closure.swift in Sources */,
 				B7AA071B2B593E09000EBE86 /* ReuseIdentifiable.swift in Sources */,
 				B7AA07172B593DC6000EBE86 /* Storyboarded.swift in Sources */,

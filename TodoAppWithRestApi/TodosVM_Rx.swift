@@ -81,8 +81,6 @@ class TodosVM_Rx: ObservableObject {
     // 할일 추가 이벤트
     var notifyTodoAdded: (() -> Void)? = nil
     
-    
-    
     // 검색결과 없음 여부 이벤트
     var notifySearchDataNotFound: ((_ noContent: Bool) -> Void)? = nil
 
