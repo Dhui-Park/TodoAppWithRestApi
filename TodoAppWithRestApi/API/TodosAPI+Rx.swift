@@ -83,7 +83,6 @@ extension TodosAPI {
         let urlString: String = baseURL + "/todos" + "?page=\(page)"
         
         guard let url = URL(string: urlString) else {
-//            return Observable.just(.failure(ApiError.notAllowedUrl))
             return Observable.error(ApiError.notAllowedUrl)
         }
         

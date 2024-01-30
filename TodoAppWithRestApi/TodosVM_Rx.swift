@@ -395,46 +395,31 @@ class TodosVM_Rx: ObservableObject {
         
         isLoading = true
         
-         
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7, execute: {
-            // 서비스 로직
-            TodosAPI.fetchTodos(page: page, completion: { [weak self] result in
-                
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let response):
-                    
-                    // 페이지 갱신
-                    
-                    if let fetchedTodos: [Todo] = response.data,
-                       let pageInfo: Meta = response.meta {
-                        
-                        self.isLoading = false
-                        
-                        if page == 1 {
-                            self.todos.accept(fetchedTodos)
-                        } else {
-                            
-                            let addedTodos = self.todos.value + fetchedTodos
-                            
-                            self.todos.accept(addedTodos)
-                        }
-                        self.pageInfo = pageInfo
-                        
-                    }
-                case .failure(let failure):
-                    print("failure: \(failure)")
-                    self.isLoading = false
-                }
+        Observable.just(())
+            .delay(RxTimeInterval.milliseconds(700), scheduler: MainScheduler.instance)
+            .flatMapLatest {
+                TodosAPI
+                    .fetchTodosWithObservable(page: page)
+            }
+            .do(onError: { err in
+                self.handleError(err)
+                self.pageInfo = nil
+            },onCompleted: {
+                self.isLoading = false
                 self.notifyRefreshEnded?()
-                
             })
-        })
-        
-        
-        
+            .compactMap { Optional(tuple: ($0.meta, $0.data)) }
+            .subscribe(onNext: { pageInfo, fetchedTodos in
+                // 페이지 갱신
+                self.isLoading = false
+                if page == 1 {
+                    self.todos.accept(fetchedTodos)
+                } else {
+                    let addedTodos = self.todos.value + fetchedTodos
+                    self.todos.accept(addedTodos)
+                }
+                self.pageInfo = pageInfo
+            }).disposed(by: disposeBag)
     }
     
     
