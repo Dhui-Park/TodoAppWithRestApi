@@ -395,6 +395,8 @@ class TodosVM_Rx: ObservableObject {
         
         isLoading = true
         
+         
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7, execute: {
             // 서비스 로직
             TodosAPI.fetchTodos(page: page, completion: { [weak self] result in

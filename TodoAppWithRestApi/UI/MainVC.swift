@@ -96,7 +96,7 @@ class MainVC: UIViewController {
         
         /// tableView 설정
         self.myTableView.register(TodoCell.uinib, forCellReuseIdentifier: TodoCell.reuseIdentifier)
-        self.myTableView.dataSource = self
+//        self.myTableView.dataSource = self
         self.myTableView.delegate = self
         self.myTableView.tableFooterView = bottomIndicator
         self.myTableView.refreshControl = refreshControl
@@ -123,16 +123,27 @@ class MainVC: UIViewController {
 //                self.presentErrorAlert(title: err)
             })
             .disposed(by: disposeBag)
+
+        
+        
         
         // ViewModel 이벤트 받기 - View&ViewModel 묶기 - RxSwift
         self.todosVM
             .todos
-            .withUnretained(self)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { mainVC, updatedTodos in
-                mainVC.todos = updatedTodos
-                mainVC.myTableView.reloadData()
-            })
+            .bind(to: self.myTableView.rx.items(cellIdentifier: TodoCell.reuseIdentifier, cellType: TodoCell.self)) { [weak self] index, cellData, cell in
+                
+                guard let self = self else { return }
+                
+                // data 셀에 넣어주기
+                cell.updateUI(cellData, selectedTodoIds: self.todosVM.selectedTodoIds)
+                
+                cell.onDeleteActionEvent = self.onDeleteItemAction
+                
+                cell.onEditActionEvent = self.onEditItemAction
+                
+                cell.onSelectedActionEvent = self.onSelectionItemAction
+                
+            }
             .disposed(by: disposeBag)
         
         // ViewModel 이벤트 받기 - Page 변경
@@ -403,30 +414,5 @@ extension MainVC: UITableViewDelegate {
     
 }
 
-extension MainVC: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.todos.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoCell.reuseIdentifier, for: indexPath) as? TodoCell else { return UITableViewCell() }
-        
-        let cellData = self.todos[indexPath.row]
-        
-        // data 셀에 넣어주기
-        cell.updateUI(cellData, selectedTodoIds: self.todosVM.selectedTodoIds)
-        
-        cell.onDeleteActionEvent = onDeleteItemAction
-        
-        cell.onEditActionEvent = onEditItemAction
-        
-        cell.onSelectedActionEvent = onSelectionItemAction
-        
-        return cell
-    }
-    
-}
 
 
