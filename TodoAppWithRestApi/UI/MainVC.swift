@@ -103,7 +103,13 @@ class MainVC: UIViewController {
         
         
         // 서치바 설정
-        self.searchBar.searchTextField.addTarget(self, action: #selector(searchTermChanged(_:)), for: .editingChanged)
+        
+        searchBar.searchTextField.rx.text.orEmpty
+            .debug("🌙")
+            .bind(onNext: self.todosVM.searchTerm.accept(_:))
+            .disposed(by: disposeBag)
+        
+//        self.searchBar.searchTextField.addTarget(self, action: #selector(searchTermChanged(_:)), for: .editingChanged)
         
         self.deleteSelectedTodosBtn.addTarget(self, action: #selector(onDeleteSelectedTodosBtnClicked(_:)), for: .touchUpInside)
         
@@ -147,12 +153,13 @@ class MainVC: UIViewController {
             .disposed(by: disposeBag)
         
         // ViewModel 이벤트 받기 - Page 변경
-        self.todosVM.notifyCurrentPageChanged = { [weak self] currentPage in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.pageInfoLabel.text = "MainVC / page: \(currentPage)"
-            }
-        }
+        self.todosVM
+            .currentPage
+            .map { "MainVC - page: \($0)" }
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.pageInfoLabel.rx.text)
+            .disposed(by: disposeBag)
+        
         
         // ViewModel 이벤트 받기 - 로딩중 여부
         self.todosVM.notifyLoadingStateChanged = { [weak self] isLoading in
@@ -179,12 +186,13 @@ class MainVC: UIViewController {
         }
         
         // ViewModel 이벤트 받기 - 다음 페이지 여부
-        self.todosVM.notifyHasNextPage = { [weak self] hasNext in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.myTableView.tableFooterView = !hasNext ? self.bottomNoMoreDataView : nil
-            }
-        }
+        self.todosVM
+            .notifyHasNextPage
+            .observe(on: MainScheduler.instance)
+            .map { !$0 ? self.bottomNoMoreDataView : nil } // Observable<UIView?>
+            .debug("⭐️ notifyHasNextPage")
+            .bind(to: self.myTableView.rx.tableFooterView)
+            .disposed(by: disposeBag)
         
         // ViewModel 이벤트 받기 - 할일 추가 완료 이벤트
         self.todosVM.notifyTodoAdded = { [weak self] in
@@ -209,9 +217,8 @@ class MainVC: UIViewController {
             guard let self = self else { return }
             print(#fileID, #function, #line, "- ")
             DispatchQueue.main.async {
-                
                 let idsInfoString = selectedTodoIds.map { "\($0)" }.joined(separator: ", ")
-                
+
                 self.selectedTodosInfoLabel.text = "선택된 할일: [" + idsInfoString + "]"
             }
         }
@@ -366,32 +373,32 @@ extension MainVC {
     
     /// 검색어가 입력되었다
     /// - Parameter sender: UITextField
-    @objc fileprivate func searchTermChanged(_ sender: UITextField) {
-//        print(#fileID, #function, #line, "- sender: \(sender.text)")
-        
-        // 검색어가 입력되면 기존 작업 취소
-        searchTermInputWorkItem?.cancel()
-        
-        let dispatchWorkItem = DispatchWorkItem(block: {
-            // 백그라운드 - 사용자 입력 userInteractive
-            DispatchQueue.global(qos: .userInteractive).async {
-                DispatchQueue.main.async { [weak self] in
-                    guard let userInput: String = sender.text,
-                          let self = self else { return }
-                    print(#fileID, #function, #line, "- 검색 API 호출하기 userInput: \(userInput)")
-                    self.todosVM.todos.accept([])
-                    // ViewModel 검색어 갱신
-                    self.todosVM.searchTerm = userInput
-                }
-            }
-        })
-        
-        // 기존 작업 취소하기 위해 메모리 주소 일치시켜줌
-        self.searchTermInputWorkItem = dispatchWorkItem
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7, execute: dispatchWorkItem)
-    }
-    
+//    @objc fileprivate func searchTermChanged(_ sender: UITextField) {
+////        print(#fileID, #function, #line, "- sender: \(sender.text)")
+//        
+//        // 검색어가 입력되면 기존 작업 취소
+//        searchTermInputWorkItem?.cancel()
+//        
+//        let dispatchWorkItem = DispatchWorkItem(block: {
+//            // 백그라운드 - 사용자 입력 userInteractive
+//            DispatchQueue.global(qos: .userInteractive).async {
+//                DispatchQueue.main.async { [weak self] in
+//                    guard let userInput: String = sender.text,
+//                          let self = self else { return }
+//                    print(#fileID, #function, #line, "- 검색 API 호출하기 userInput: \(userInput)")
+//                    self.todosVM.todos.accept([])
+//                    // ViewModel 검색어 갱신
+//                    self.todosVM.searchTerm = userInput
+//                }
+//            }
+//        })
+//        
+//        // 기존 작업 취소하기 위해 메모리 주소 일치시켜줌
+//        self.searchTermInputWorkItem = dispatchWorkItem
+//        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7, execute: dispatchWorkItem)
+//    }
+//    
 }
 
 extension MainVC: UITableViewDelegate {

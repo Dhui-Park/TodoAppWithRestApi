@@ -24,12 +24,19 @@ class TodosVM_Rx: ObservableObject {
     
     
     /// 검색어
-    var searchTerm: String = "" {
-        didSet {
-            print(#fileID, #function, #line, "- searchTerm: \(searchTerm)")
-            self.searchTodos(searchTerm: searchTerm)
-        }
-    }
+    var searchTerm: BehaviorRelay<String> = BehaviorRelay<String>(value: "")
+    
+    
+//    var searchTerm: String = "" {
+//        didSet {
+//            print(#fileID, #function, #line, "- searchTerm: \(searchTerm)")
+//            if searchTerm.count > 0 {
+//                self.searchTodos(searchTerm: searchTerm)
+//            } else {
+//                self.fetchTodos()
+//            }
+//        }
+//    }
     
     
 //    var errorHeard: Observable<String> = Observable.empty()
@@ -48,17 +55,12 @@ class TodosVM_Rx: ObservableObject {
     // sub 2
     var errorMsgInfoSecondObservable : Observable<String> = Observable.empty()
     
-    var pageInfo: Meta? = nil {
-        didSet {
-            print(#fileID, #function, #line, "- pageInfo: \(pageInfo)")
-            
-            // 다음 페이지 여부 이벤트 보내기
-            self.notifyHasNextPage?(pageInfo?.hasNext() ?? true)
-            
-            // 현재 페이지 변경 이벤트 보내기
-            self.notifyCurrentPageChanged?(currentPage)
-        }
-    }
+    
+    var pageInfo: BehaviorRelay<Meta?> = BehaviorRelay<Meta?>(value: nil)
+
+    // 다음 페이지 여부 이벤트
+    var notifyHasNextPage: Observable<Bool>
+        
     
     var selectedTodoIds: Set<Int> = [] {
         didSet {
@@ -67,16 +69,7 @@ class TodosVM_Rx: ObservableObject {
         }
     }
     
-    var currentPage: Int {
-        get {
-            if let pageInfo = self.pageInfo,
-               let currentPage = pageInfo.currentPage {
-                return currentPage
-            } else {
-                return 1
-            }
-        }
-    }
+    var currentPage: BehaviorRelay<Int> = BehaviorRelay<Int>(value: 1)
     
     var isLoading: Bool = false {
         didSet {
@@ -88,8 +81,7 @@ class TodosVM_Rx: ObservableObject {
     // 할일 추가 이벤트
     var notifyTodoAdded: (() -> Void)? = nil
     
-    // 다음 페이지 여부 이벤트
-    var notifyHasNextPage: ((_ hasNext: Bool) -> Void)? = nil
+    
     
     // 검색결과 없음 여부 이벤트
     var notifySearchDataNotFound: ((_ noContent: Bool) -> Void)? = nil
@@ -99,9 +91,7 @@ class TodosVM_Rx: ObservableObject {
     
     // 로딩중 여부 변경 이벤트
     var notifyLoadingStateChanged: ((_ isLoading: Bool) -> Void)? = nil
-    
     // 현재 페이지 변경 이벤트
-    var notifyCurrentPageChanged: ((Int) -> Void)? = nil
     
     // 에러 발생 이벤트
     var notifyErrorOccured: ((_ errMsg: String) -> Void)? = nil
@@ -112,7 +102,41 @@ class TodosVM_Rx: ObservableObject {
     
     init() {
         print(#fileID, #function, #line, "- ")
-        fetchTodos()
+        
+        pageInfo
+            .compactMap { $0 } // Meta
+            .map {
+                if let currentPage = $0.currentPage {
+                    return currentPage
+                } else {
+                    return 1
+                }
+            }
+            .bind(onNext: self.currentPage.accept(_:))
+            .disposed(by: disposeBag)
+        
+        
+        self.notifyHasNextPage = pageInfo.map { $0?.hasNext() ?? true }
+        
+        searchTerm
+            .withUnretained(self)
+            .do(onNext: { vm, _ in
+                vm.todos.accept([])
+            })
+            .debounce(RxTimeInterval.milliseconds(700), scheduler: MainScheduler.instance)
+            .debug("🌙")
+            .subscribe(onNext: { vm, searchTerm in
+                if searchTerm.count > 0 {
+                    vm.pageInfo.accept(nil)
+                    vm.currentPage.accept(1)
+                    vm.searchTodos(searchTerm: searchTerm)
+                } else {
+                    vm.fetchTodos()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+//        fetchTodos()
         
         errorMsgInfoObservable = errorHeardSubject.map{ "err: \($0)" }
         
@@ -155,7 +179,7 @@ class TodosVM_Rx: ObservableObject {
         
         if searchTerm.count < 1 {
             print("검색어가 없습니다.")
-            self.fetchTodos()
+//            self.fetchTodos()
             return
         }
         
@@ -164,7 +188,7 @@ class TodosVM_Rx: ObservableObject {
             return
         }
         
-        guard pageInfo?.hasNext() ?? true else {
+        guard pageInfo.value?.hasNext() ?? true else {
             return print("다음 페이지 없다~")
         }
         
@@ -199,7 +223,7 @@ class TodosVM_Rx: ObservableObject {
                             
                             self.todos.accept(addedTodos)
                         }
-                        self.pageInfo = pageInfo
+                        self.pageInfo.accept(pageInfo)
                     }
                 case .failure(let failure):
                     print("failure: \(failure)")
@@ -222,18 +246,17 @@ class TodosVM_Rx: ObservableObject {
     func fetchMore() {
         print(#fileID, #function, #line, "- ")
         
-        guard let pageInfo = pageInfo,
+        guard let pageInfo = pageInfo.value,
               pageInfo.hasNext(),
               !isLoading
         else {
             return print("다음 페이지가 없다.")
         }
         
-        
-        if searchTerm.count > 0 { // 검색어가 있으면
-            self.searchTodos(searchTerm: searchTerm, page: self.currentPage + 1)
+        if searchTerm.value.count > 0 { // 검색어가 있으면
+            self.searchTodos(searchTerm: searchTerm.value, page: self.currentPage.value + 1)
         } else {
-            self.fetchTodos(page: currentPage + 1)
+            self.fetchTodos(page: currentPage.value + 1)
         }
         
     }
@@ -262,7 +285,7 @@ class TodosVM_Rx: ObservableObject {
                 if let fetchedTodos: [Todo] = response.data,
                    let pageInfo: Meta = response.meta {
                     self.todos.accept(fetchedTodos)
-                    self.pageInfo = pageInfo
+                    self.pageInfo.accept(pageInfo)
                     self.notifyTodoAdded?()
                 }
             case .failure(let failure):
@@ -403,7 +426,7 @@ class TodosVM_Rx: ObservableObject {
             }
             .do(onError: { err in
                 self.handleError(err)
-                self.pageInfo = nil
+                self.pageInfo.accept(nil)
             },onCompleted: {
                 self.isLoading = false
                 self.notifyRefreshEnded?()
@@ -418,7 +441,7 @@ class TodosVM_Rx: ObservableObject {
                     let addedTodos = self.todos.value + fetchedTodos
                     self.todos.accept(addedTodos)
                 }
-                self.pageInfo = pageInfo
+                self.pageInfo.accept(pageInfo)
             }).disposed(by: disposeBag)
     }
     
